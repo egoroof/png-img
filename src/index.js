@@ -5,16 +5,18 @@ const fs = require('fs');
 module.exports = class PngImg {
     ///
     constructor(rawImg) {
-        this.img_ = upng.decode(rawImg);
+        this.img = upng.decode(rawImg);
         // https://www.w3.org/TR/PNG/#6Colour-values
-        this.img_.hasAlpha = this.img_.ctype === 4 || this.img_.ctype === 6;
+        this.img.hasAlpha = this.img.ctype === 4 || this.img.ctype === 6;
+        // todo
+        // this.img.rgba = upng.toRGBA8(this.img)[0];
     }
 
     ///
     size() {
         return {
-            width: this.img_.width,
-            height: this.img_.height
+            width: this.img.width,
+            height: this.img.height
         };
     }
 
@@ -25,7 +27,7 @@ module.exports = class PngImg {
      * @return {Object}  {r, g, b, a}
      */
     get(x, y) {
-        const img = this.img_;
+        const img = this.img;
         if (x > img.width - 1 || y > img.height - 1) {
             throw new Error('x and y should be less than image size');
         }
@@ -58,7 +60,7 @@ module.exports = class PngImg {
      * @param {Object|String} color as rgb object or as a '#XXXXXX' string
      */
     fill(offsetX, offsetY, width, height, color) {
-        const img = this.img_;
+        const img = this.img;
         if (typeof offsetX !== 'number') {
             offsetX = 0;
         }
@@ -111,25 +113,25 @@ module.exports = class PngImg {
         if (offsetX > width || offsetY > height) {
             throw new Error('Offsets should be less than dimensions');
         }
-        if (width > this.img_.width || height > this.img_.height) {
+        if (width > this.img.width || height > this.img.height) {
             throw new Error('Dimensions should be less than image size');
         }
-        const channelCount = this.img_.hasAlpha ? 4 : 3;
+        const channelCount = this.img.hasAlpha ? 4 : 3;
         const cropped = Buffer.alloc(width * height * channelCount);
-        const src = Buffer.from(this.img_.data.buffer);
+        const src = Buffer.from(this.img.data.buffer);
         let croppedPos = 0;
 
         for (let i = offsetY; i < height + offsetY; i++) {
             for (let j = offsetX; j < width + offsetX; j++) {
-                const pos = (i * this.img_.width + j) * channelCount;
+                const pos = (i * this.img.width + j) * channelCount;
                 cropped.writeUIntLE(src.readUIntLE(pos, channelCount), croppedPos, channelCount);
                 croppedPos += channelCount;
             }
         }
 
-        this.img_.data = new Uint8Array(cropped.buffer);
-        this.img_.width = width;
-        this.img_.height = height;
+        this.img.data = new Uint8Array(cropped.buffer);
+        this.img.width = width;
+        this.img.height = height;
 
         return this;
     }
@@ -146,21 +148,21 @@ module.exports = class PngImg {
             return this.crop(0, 0, width, height);
         }
 
-        const channelCount = this.img_.hasAlpha ? 4 : 3;
+        const channelCount = this.img.hasAlpha ? 4 : 3;
         const extended = new Uint8Array(width * height * channelCount);
         let pos = 0;
 
-        for (let i = 0; i < this.img_.height; i++) {
-            for (let j = 0; j < this.img_.width; j++) {
+        for (let i = 0; i < this.img.height; i++) {
+            for (let j = 0; j < this.img.width; j++) {
                 for (let channel = 0; channel < channelCount; channel++) {
                     const extendedPos = (i * width + j) * channelCount + channel;
-                    extended[extendedPos] = this.img_.data[pos++];
+                    extended[extendedPos] = this.img.data[pos++];
                 }
             }
         }
-        this.img_.data = extended;
-        this.img_.width = width;
-        this.img_.height = height;
+        this.img.data = extended;
+        this.img.width = width;
+        this.img.height = height;
 
         return this;
     }
@@ -185,21 +187,21 @@ module.exports = class PngImg {
             throw new Error('Out of the bounds');
         }
 
-        const channelCount = this.img_.hasAlpha ? 4 : 3;
+        const channelCount = this.img.hasAlpha ? 4 : 3;
         let pos = 0;
 
         for (let i = offsetY; i < imgSize.height + offsetY; i++) {
             for (let j = offsetX; j < imgSize.width + offsetX; j++) {
                 const myPos = (i * mySize.width + j) * channelCount;
 
-                this.img_.data[myPos] = img.img_.data[pos++];
-                this.img_.data[myPos + 1] = img.img_.data[pos++];
-                this.img_.data[myPos + 2] = img.img_.data[pos++];
-                if (this.img_.hasAlpha) {
-                    if (img.img_.hasAlpha) {
-                        this.img_.data[myPos + 3] = img.img_.data[pos++];
+                this.img.data[myPos] = img.img.data[pos++];
+                this.img.data[myPos + 1] = img.img.data[pos++];
+                this.img.data[myPos + 2] = img.img.data[pos++];
+                if (this.img.hasAlpha) {
+                    if (img.img.hasAlpha) {
+                        this.img.data[myPos + 3] = img.img.data[pos++];
                     } else {
-                        this.img_.data[myPos + 3] = 255;
+                        this.img.data[myPos + 3] = 255;
                     }
                 }
             }
@@ -228,7 +230,7 @@ module.exports = class PngImg {
      * @param  {SaveCallback} callback
      */
     save(file, callback) {
-        const img = this.img_;
+        const img = this.img;
         const alpha = img.hasAlpha ? 1 : 0;
         const buffer = Buffer.from(upng.encodeLL([img.data.buffer], img.width, img.height, 3, alpha, img.depth));
         fs.writeFile(file, buffer, callback);

@@ -10,32 +10,6 @@ const outPath = __dirname + '/out.png';
 
 // add tests
 suite
-    .add('native, crop 32 bit image', {
-        defer: true,
-        fn: function (deferred) {
-            var img = new NativePngImg(img32);
-            img.crop(100, 100, 640, 512);
-            img.save(outPath, function (err) {
-                if (err) {
-                    console.error(err);
-                }
-                deferred.resolve();
-            });
-        }
-    })
-    .add('native, crop 24 bit image', {
-        defer: true,
-        fn: function (deferred) {
-            var img = new NativePngImg(img24);
-            img.crop(100, 100, 640, 512);
-            img.save(outPath, function (err) {
-                if (err) {
-                    console.error(err);
-                }
-                deferred.resolve();
-            });
-        }
-    })
     .add('crop 32 bit image', {
         defer: true,
         fn: function (deferred) {
@@ -53,6 +27,32 @@ suite
         defer: true,
         fn: function (deferred) {
             var img = new PngImg(img24);
+            img.crop(100, 100, 640, 512);
+            img.save(outPath, function (err) {
+                if (err) {
+                    console.error(err);
+                }
+                deferred.resolve();
+            });
+        }
+    })
+    .add('[native] crop 32 bit image', {
+        defer: true,
+        fn: function (deferred) {
+            var img = new NativePngImg(img32);
+            img.crop(100, 100, 640, 512);
+            img.save(outPath, function (err) {
+                if (err) {
+                    console.error(err);
+                }
+                deferred.resolve();
+            });
+        }
+    })
+    .add('[native] crop 24 bit image', {
+        defer: true,
+        fn: function (deferred) {
+            var img = new NativePngImg(img24);
             img.crop(100, 100, 640, 512);
             img.save(outPath, function (err) {
                 if (err) {

@@ -1,45 +1,45 @@
-var Index = require('benchmark');
-var fs = require('fs');
-var pngjs = require('../src/index');
-// var NativePngImg = require('./native');
+const benchmark = require('benchmark');
+const fs = require('fs');
+const PngImg = require('../src/index');
+const NativePngImg = require('png-img');
 
-var suite = new Index.Suite();
-var img32 = fs.readFileSync(__dirname + '/test.png');
-var img24 = fs.readFileSync(__dirname + '/test_no_alpha.png');
-var outPath = __dirname + '/out.png';
+const suite = new benchmark.Suite();
+const img32 = fs.readFileSync(__dirname + '/test.png');
+const img24 = fs.readFileSync(__dirname + '/test_no_alpha.png');
+const outPath = __dirname + '/out.png';
 
 // add tests
 suite
-    // .add('native, crop 32 bit image', {
-    //     defer: true,
-    //     fn: function (deferred) {
-    //         var img = new NativePngImg(img32);
-    //         img.crop(100, 100, 640, 512);
-    //         img.save(outPath, function (err) {
-    //             if (err) {
-    //                 console.error(err);
-    //             }
-    //             deferred.resolve();
-    //         });
-    //     }
-    // })
-    // .add('native, crop 24 bit image', {
-    //     defer: true,
-    //     fn: function (deferred) {
-    //         var img = new NativePngImg(img24);
-    //         img.crop(100, 100, 640, 512);
-    //         img.save(outPath, function (err) {
-    //             if (err) {
-    //                 console.error(err);
-    //             }
-    //             deferred.resolve();
-    //         });
-    //     }
-    // })
+    .add('native, crop 32 bit image', {
+        defer: true,
+        fn: function (deferred) {
+            var img = new NativePngImg(img32);
+            img.crop(100, 100, 640, 512);
+            img.save(outPath, function (err) {
+                if (err) {
+                    console.error(err);
+                }
+                deferred.resolve();
+            });
+        }
+    })
+    .add('native, crop 24 bit image', {
+        defer: true,
+        fn: function (deferred) {
+            var img = new NativePngImg(img24);
+            img.crop(100, 100, 640, 512);
+            img.save(outPath, function (err) {
+                if (err) {
+                    console.error(err);
+                }
+                deferred.resolve();
+            });
+        }
+    })
     .add('crop 32 bit image', {
         defer: true,
         fn: function (deferred) {
-            var img = new pngjs(img32);
+            var img = new PngImg(img32);
             img.crop(100, 100, 640, 512);
             img.save(outPath, function (err) {
                 if (err) {
@@ -52,7 +52,7 @@ suite
     .add('crop 24 bit image', {
         defer: true,
         fn: function (deferred) {
-            var img = new pngjs(img24);
+            var img = new PngImg(img24);
             img.crop(100, 100, 640, 512);
             img.save(outPath, function (err) {
                 if (err) {

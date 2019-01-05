@@ -1,6 +1,5 @@
 /node_modules/
 /.idea/
-/bench/png_img.node
 npm-debug.log
 .sublime-project*
 .DS_store

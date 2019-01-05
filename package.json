@@ -16,6 +16,9 @@
     "mocha": "^2.0.1",
     "sinon": "^1.17.3"
   },
+  "optionalDependencies": {
+    "png-img": "2.2.0"
+  },
   "scripts": {
     "lint": "eslint src",
     "mocha": "mocha",

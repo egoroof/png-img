@@ -10,7 +10,7 @@ var outPath = __dirname + '/out.png';
 
 // add tests
 suite
-    // .add('native, 32 bit image', {
+    // .add('native, crop 32 bit image', {
     //     defer: true,
     //     fn: function (deferred) {
     //         var img = new NativePngImg(img32);
@@ -23,7 +23,7 @@ suite
     //         });
     //     }
     // })
-    // .add('native, 24 bit image', {
+    // .add('native, crop 24 bit image', {
     //     defer: true,
     //     fn: function (deferred) {
     //         var img = new NativePngImg(img24);
@@ -36,7 +36,7 @@ suite
     //         });
     //     }
     // })
-    .add('js, 32 bit image', {
+    .add('crop 32 bit image', {
         defer: true,
         fn: function (deferred) {
             var img = new pngjs(img32);
@@ -49,7 +49,7 @@ suite
             });
         }
     })
-    .add('js, 24 bit image', {
+    .add('crop 24 bit image', {
         defer: true,
         fn: function (deferred) {
             var img = new pngjs(img24);

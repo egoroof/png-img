@@ -1,6 +1,4 @@
-'use strict';
-
-const PngImg = require('../');
+const PngImg = require('../src/index');
 const testData = require('./data');
 
 describe('crop', () => {
@@ -44,7 +42,7 @@ describe('crop', () => {
     });
 
     it('should reset size after crop', () => {
-        const newSize = {width: 16, height: 16};
+        const newSize = { width: 16, height: 16 };
 
         img.crop(0, 0, newSize.width, newSize.height);
 

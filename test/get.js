@@ -1,6 +1,4 @@
-'use strict';
-
-const PngImg = require('../');
+const PngImg = require('../src/index');
 const testData = require('./data');
 
 describe('get', () => {
@@ -21,10 +19,10 @@ describe('get', () => {
         const b = img.get(2, 0);
         const a = img.get(3, 0);
 
-        assert.deepEqual(r, {r: 255, g: 0, b: 0, a: 255});
-        assert.deepEqual(g, {r: 0, g: 255, b: 0, a: 255});
-        assert.deepEqual(b, {r: 0, g: 0, b: 255, a: 255});
-        assert.deepEqual(a, {r: 0, g: 0, b: 0, a: 0});
+        assert.deepEqual(r, { r: 255, g: 0, b: 0, a: 255 });
+        assert.deepEqual(g, { r: 0, g: 255, b: 0, a: 255 });
+        assert.deepEqual(b, { r: 0, g: 0, b: 255, a: 255 });
+        assert.deepEqual(a, { r: 0, g: 0, b: 0, a: 0 });
     });
 
     it('should return alpha 255 if image without alpha', () => {
@@ -34,8 +32,8 @@ describe('get', () => {
         const g = noAlphaImg.get(1, 0);
         const b = noAlphaImg.get(2, 0);
 
-        assert.deepEqual(r, {r: 255, g: 0, b: 0, a: 255});
-        assert.deepEqual(g, {r: 0, g: 255, b: 0, a: 255});
-        assert.deepEqual(b, {r: 0, g: 0, b: 255, a: 255});
+        assert.deepEqual(r, { r: 255, g: 0, b: 0, a: 255 });
+        assert.deepEqual(g, { r: 0, g: 255, b: 0, a: 255 });
+        assert.deepEqual(b, { r: 0, g: 0, b: 255, a: 255 });
     });
 });

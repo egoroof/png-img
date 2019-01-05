@@ -1,10 +1,8 @@
-'use strict';
-
-const PngImg = require('../');
+const PngImg = require('../src/index');
 const rawImg = require('./data').readFileSync('black2x2rgba.png');
 
-const RED = {r: 255, g: 0, b: 0, a: 0};
-const BLACK = {r: 0, g: 0, b: 0, a: 0};
+const RED = { r: 255, g: 0, b: 0, a: 0 };
+const BLACK = { r: 0, g: 0, b: 0, a: 0 };
 
 describe('setSize', () => {
     const sandbox = sinon.sandbox.create();
@@ -25,7 +23,7 @@ describe('setSize', () => {
 
         img.setSize(3, 3);
 
-        assert.deepEqual(img.size(), {width: 3, height: 3});
+        assert.deepEqual(img.size(), { width: 3, height: 3 });
     });
 
     it('should return self', () => {
@@ -61,8 +59,8 @@ describe('setSize', () => {
 
     it('should correctly set size after crop', () => {
         const img = new PngImg(rawImg)
-                .fill(0, 0, 2, 2, RED)
-                .crop(0, 0, 1, 1);
+            .fill(0, 0, 2, 2, RED)
+            .crop(0, 0, 1, 1);
 
         img.setSize(2, 2);
 

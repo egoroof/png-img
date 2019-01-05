@@ -1,7 +1,5 @@
-'use strict';
-
-const PngImg = require('../');
-const RGBToString = require('../utils').RGBToString;
+const PngImg = require('../src/index');
+const RGBToString = require('../src/utils').RGBToString;
 const testData = require('./data');
 const rawImg = testData.readFileSync('test32x32.png');
 
@@ -49,7 +47,7 @@ describe('fill', () => {
     });
 
     it('should fill with color passed as rgb object', () => {
-        const white = {r: 255, g: 255, b: 255, a: 255};
+        const white = { r: 255, g: 255, b: 255, a: 255 };
         img.fill(0, 0, 1, 1, white);
         assert.deepEqual(img.get(0, 0), white);
     });
@@ -61,7 +59,7 @@ describe('fill', () => {
     });
 
     it('should fill using alpha', () => {
-        const transparentWhite = {r: 255, g: 255, b: 255, a: 50};
+        const transparentWhite = { r: 255, g: 255, b: 255, a: 50 };
         img.fill(0, 0, 1, 1, transparentWhite);
         assert.deepEqual(img.get(0, 0), transparentWhite);
     });
@@ -69,7 +67,7 @@ describe('fill', () => {
     it('should ignore alpha in image without alpha', () => {
         const noAlphaRaw = testData.readFileSync('rgb3x1_noalpha.png');
         const noAlphaImg = new PngImg(noAlphaRaw);
-        const transparentWhite = {r: 255, g: 255, b: 255, a: 50};
+        const transparentWhite = { r: 255, g: 255, b: 255, a: 50 };
 
         noAlphaImg.fill(0, 0, 1, 1, transparentWhite);
 
@@ -85,10 +83,10 @@ describe('fill', () => {
 
         bigImg.fill(offsetX, offsetY, width, height, cyan);
 
-        for(let i = 0; i < bigImg.size().width; ++i) {
-            for(let j = 0; j < bigImg.size().height; ++j) {
+        for (let i = 0; i < bigImg.size().width; ++i) {
+            for (let j = 0; j < bigImg.size().height; ++j) {
                 const pxl = RGBToString(bigImg.get(i, j));
-                if(i < offsetX || j < offsetY || i >= offsetX + width || j >= offsetY + height) {
+                if (i < offsetX || j < offsetY || i >= offsetX + width || j >= offsetY + height) {
                     assert.notEqual(pxl, cyan);
                 } else {
                     assert.equal(pxl, cyan);

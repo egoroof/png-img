@@ -2,17 +2,24 @@
   "name": "png-img",
   "version": "2.2.0",
   "description": "PNG Image",
-  "main": "index.js",
+  "main": "src/index.js",
   "engines": {
-    "node": ">= 4.0.0"
+    "node": ">= 6.0.0"
+  },
+  "dependencies": {
+    "upng-js": "git+https://github.com/photopea/UPNG.js"
   },
   "devDependencies": {
+    "benchmark": "^2.1.4",
+    "chai": "^3.5.0",
+    "eslint": "^5.11.1",
     "mocha": "^2.0.1",
-    "sinon": "^1.17.3",
-    "chai": "^3.5.0"
+    "sinon": "^1.17.3"
   },
   "scripts": {
-    "test": "./dev/test"
+    "lint": "eslint src",
+    "mocha": "mocha",
+    "test": "npm run lint && npm run mocha"
   },
   "author": "Anton Usmansky <anton.usmansky@gmail.com> (https://github.com/j0tunn)",
   "license": "MIT",

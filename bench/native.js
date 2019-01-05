@@ -1,7 +1,7 @@
 'use strict';
 
-const utils = require('./utils');
-const PngImgImpl = require('./build/Release/png_img').PngImg;
+const utils = require('../src/utils');
+const PngImgImpl = require('./png_img').PngImg;
 
 module.exports = class PngImg {
     ///

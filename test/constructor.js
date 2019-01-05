@@ -1,6 +1,4 @@
-'use strict';
-
-const PngImg = require('../');
+const PngImg = require('../src/index');
 const testData = require('./data');
 
 describe('constructor', () => {
@@ -9,7 +7,7 @@ describe('constructor', () => {
     });
 
     it('should throw if bad buffer passed', () => {
-        assert.throws(() => new PngImg(new Buffer({})));
+        assert.throws(() => new PngImg(Buffer.alloc(0)));
     });
 
     it('should not throw with valid image passed', () => {

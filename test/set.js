@@ -1,7 +1,5 @@
-'use strict';
-
-const PngImg = require('../');
-const RGBToString = require('../utils').RGBToString;
+const PngImg = require('../src/index');
+const RGBToString = require('../src/utils').RGBToString;
 const testData = require('./data');
 
 describe('set', () => {
@@ -30,7 +28,7 @@ describe('set', () => {
     });
 
     it('should set color passed as rgb object', () => {
-        const white = {r: 255, g: 255, b: 255, a: 255};
+        const white = { r: 255, g: 255, b: 255, a: 255 };
         img.set(0, 0, white);
         assert.deepEqual(img.get(0, 0), white);
     });
@@ -42,7 +40,7 @@ describe('set', () => {
     });
 
     it('should set alpha too', () => {
-        const transparentWhite = {r: 255, g: 255, b: 255, a: 50};
+        const transparentWhite = { r: 255, g: 255, b: 255, a: 50 };
         img.set(0, 0, transparentWhite);
         assert.deepEqual(img.get(0, 0), transparentWhite);
     });
@@ -50,7 +48,7 @@ describe('set', () => {
     it('should ignore alpha in image without alpha', () => {
         const noAlphaRaw = testData.readFileSync('rgb3x1_noalpha.png');
         const noAlphaImg = new PngImg(noAlphaRaw);
-        const transparentWhite = {r: 255, g: 255, b: 255, a: 50};
+        const transparentWhite = { r: 255, g: 255, b: 255, a: 50 };
 
         noAlphaImg.set(0, 0, transparentWhite);
 

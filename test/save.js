@@ -1,6 +1,4 @@
-'use strict';
-
-const PngImg = require('../');
+const PngImg = require('../src/index');
 const fs = require('fs');
 const path = require('path');
 const testData = require('./data');
@@ -10,7 +8,7 @@ describe('save', () => {
     const savePath = path.join(__dirname, 'tmp.png');
 
     afterEach(() => {
-        if(fs.existsSync(savePath)) {
+        if (fs.existsSync(savePath)) {
             fs.unlinkSync(savePath);
         }
     });
@@ -26,7 +24,7 @@ describe('save', () => {
 
     it('should save image', done => {
         img.save(savePath, error => {
-            assert.isUndefined(error);
+            assert.isNull(error);
             assert.isTrue(fs.existsSync(savePath));
             done();
         });
@@ -35,18 +33,18 @@ describe('save', () => {
     it('should overwrite existing file', done => {
         const txt = 'o.O';
         fs.writeFileSync(savePath, txt);
-        assert.equal(fs.readFileSync(savePath, {encoding: 'utf8'}), txt);
+        assert.equal(fs.readFileSync(savePath, { encoding: 'utf8' }), txt);
 
         img.save(savePath, error => {
-            assert.isUndefined(error);
-            assert.notEqual(fs.readFileSync(savePath, {encoding: 'utf8'}), txt);
+            assert.isNull(error);
+            assert.notEqual(fs.readFileSync(savePath, { encoding: 'utf8' }), txt);
             done();
         });
     });
 
     it('should read previously saved img', done => {
         img.save(savePath, error => {
-            assert.isUndefined(error);
+            assert.isNull(error);
 
             const img2 = new PngImg(fs.readFileSync(savePath));
 

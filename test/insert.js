@@ -1,12 +1,10 @@
-'use strict';
-
-const PngImg = require('../');
+const PngImg = require('../src/index');
 const testData = require('./data');
 const rawImg = testData.readFileSync('black2x2rgba.png');
 
-const RED = {r: 255, g: 0, b: 0, a: 255};
-const GREEN = {r: 0, g: 255, b: 0, a: 255};
-const BLUE = {r: 0, g: 0, b: 255, a: 255};
+const RED = { r: 255, g: 0, b: 0, a: 255 };
+const GREEN = { r: 0, g: 255, b: 0, a: 255 };
+const BLUE = { r: 0, g: 0, b: 255, a: 255 };
 
 describe('insert', () => {
     it('should return image itself', () => {

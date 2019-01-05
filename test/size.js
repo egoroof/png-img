@@ -1,6 +1,4 @@
-'use strict';
-
-const PngImg = require('../');
+const PngImg = require('../src/index');
 const testData = require('./data');
 
 describe('size', () => {

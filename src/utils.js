@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * @param {Object} rgb object {r:Number, g:Number, b:Number}
  * @return {String} '#XXXXXX' string
@@ -8,7 +6,7 @@ exports.RGBToString = function(rgb) {
     return '#' + toStr_(rgb.r) + toStr_(rgb.g) + toStr_(rgb.b);
 
     ///
-    function toStr_(n, minLen) {
+    function toStr_(n) {
         const str = n.toString(16);
         return str.length < 2 ? '0' + str : str;
     }

@@ -118,18 +118,17 @@ module.exports = class PngImg {
         }
         const channelCount = this.img.hasAlpha ? 4 : 3;
         const cropped = Buffer.alloc(width * height * channelCount);
-        const src = Buffer.from(this.img.data.buffer);
         let croppedPos = 0;
 
         for (let i = offsetY; i < height + offsetY; i++) {
             for (let j = offsetX; j < width + offsetX; j++) {
                 const pos = (i * this.img.width + j) * channelCount;
-                cropped.writeUIntLE(src.readUIntLE(pos, channelCount), croppedPos, channelCount);
+                cropped.writeUIntLE(this.img.data.readUIntLE(pos, channelCount), croppedPos, channelCount);
                 croppedPos += channelCount;
             }
         }
 
-        this.img.data = new Uint8Array(cropped.buffer);
+        this.img.data = cropped;
         this.img.width = width;
         this.img.height = height;
 

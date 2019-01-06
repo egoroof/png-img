@@ -212,6 +212,28 @@ module.exports = class PngImg {
      * Rotates image 90 degrees clockwise
      */
     rotateRight() {
+        const size = this.size();
+        const channelCount = this.img.hasAlpha ? 4 : 3;
+        const rotated = Buffer.allocUnsafe(size.width * size.height * channelCount);
+        let pos = 0;
+
+        // transform every pixel:
+        // rowNew = col
+        // colNew = rowCount - 1 - row
+        // rotated[rowNew, colNew] = data[row, col]
+        for (let row = 0; row < size.height; row++) {
+            const colNew = size.height - 1 - row;
+            for (let col = 0; col < size.width; col++) {
+                const posNew = (col * size.height + colNew) * channelCount;
+                rotated.writeUIntLE(this.img.data.readUIntLE(pos, channelCount), posNew, channelCount);
+                pos += channelCount;
+            }
+        }
+
+        this.img.data = rotated;
+        this.img.width = size.height;
+        this.img.height = size.width;
+
         return this;
     }
 
@@ -219,6 +241,28 @@ module.exports = class PngImg {
      * Rotates image 90 degrees counterclockwise
      */
     rotateLeft() {
+        const size = this.size();
+        const channelCount = this.img.hasAlpha ? 4 : 3;
+        const rotated = Buffer.allocUnsafe(size.width * size.height * channelCount);
+        let pos = 0;
+
+        // transform every pixel:
+        // rowNew = colCount - 1 - col
+        // colNew = row
+        // rotated[rowNew, colNew] = data[row, col]
+        for (let row = 0; row < size.height; row++) {
+            for (let col = 0; col < size.width; col++) {
+                const rowNew = size.width - 1 - col;
+                const posNew = (rowNew * size.height + row) * channelCount;
+                rotated.writeUIntLE(this.img.data.readUIntLE(pos, channelCount), posNew, channelCount);
+                pos += channelCount;
+            }
+        }
+
+        this.img.data = rotated;
+        this.img.width = size.height;
+        this.img.height = size.width;
+
         return this;
     }
 

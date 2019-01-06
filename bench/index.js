@@ -8,9 +8,34 @@ const img32 = fs.readFileSync(__dirname + '/test.png');
 const img24 = fs.readFileSync(__dirname + '/test_no_alpha.png');
 const outPath = __dirname + '/out.png';
 
-// add tests
 suite
-    .add('increase size by 400 for all dimensions', {
+    .add('rotateRight', {
+        defer: true,
+        fn: function (deferred) {
+            const img = new PngImg(img32);
+            img.rotateRight();
+            img.save(outPath, function (err) {
+                if (err) {
+                    console.error(err);
+                }
+                deferred.resolve();
+            });
+        }
+    })
+    .add('[native] rotateRight', {
+        defer: true,
+        fn: function (deferred) {
+            const img = new NativePngImg(img32);
+            img.rotateRight();
+            img.save(outPath, function (err) {
+                if (err) {
+                    console.error(err);
+                }
+                deferred.resolve();
+            });
+        }
+    })
+    .add('setSize', {
         defer: true,
         fn: function (deferred) {
             const img = new PngImg(img32);
@@ -24,7 +49,7 @@ suite
             });
         }
     })
-    .add('[native] increase size by 400 for all dimensions', {
+    .add('[native] setSize', {
         defer: true,
         fn: function (deferred) {
             const img = new NativePngImg(img32);

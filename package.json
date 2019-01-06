@@ -11,14 +11,14 @@
   },
   "devDependencies": {
     "benchmark": "^2.1.4",
-    "chai": "^3.5.0",
-    "eslint": "^5.11.1",
-    "mocha": "^2.0.1",
-    "sinon": "^1.17.3",
+    "chai": "^4.2.0",
+    "eslint": "^5.12.0",
+    "mocha": "^5.2.0",
+    "sinon": "^7.2.2",
     "png-img": "2.2.0"
   },
   "scripts": {
-    "lint": "eslint src",
+    "lint": "eslint src bench test",
     "mocha": "mocha",
     "test": "npm run lint && npm run mocha"
   },

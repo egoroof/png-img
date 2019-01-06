@@ -8,8 +8,6 @@ module.exports = class PngImg {
         this.img = upng.decode(rawImg);
         // https://www.w3.org/TR/PNG/#6Colour-values
         this.img.hasAlpha = this.img.ctype === 4 || this.img.ctype === 6;
-        // todo
-        // this.img.rgba = upng.toRGBA8(this.img)[0];
     }
 
     ///
@@ -193,7 +191,7 @@ module.exports = class PngImg {
         for (let i = offsetY; i < imgSize.height + offsetY; i++) {
             for (let j = offsetX; j < imgSize.width + offsetX; j++) {
                 const myPos = (i * mySize.width + j) * channelCount;
-
+                // todo write 3 bytes at once
                 this.img.data[myPos] = img.img.data[pos++];
                 this.img.data[myPos + 1] = img.img.data[pos++];
                 this.img.data[myPos + 2] = img.img.data[pos++];

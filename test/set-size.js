@@ -5,13 +5,11 @@ const RED = { r: 255, g: 0, b: 0, a: 0 };
 const BLACK = { r: 0, g: 0, b: 0, a: 0 };
 
 describe('setSize', () => {
-    const sandbox = sinon.sandbox.create();
-
-    afterEach(() => sandbox.restore());
+    afterEach(() => sinon.restore());
 
     it('should call crop if new size is smaller than current', () => {
         const img = new PngImg(rawImg).fill(0, 0, 2, 2, RED);
-        sandbox.stub(img, 'crop');
+        sinon.stub(img, 'crop');
 
         img.setSize(2, 2);
 

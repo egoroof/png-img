@@ -64,6 +64,5 @@ suite
     })
     .on('cycle', function (event) {
         console.log(String(event.target));
-        fs.unlinkSync(outPath);
     })
     .run({ 'async': true });

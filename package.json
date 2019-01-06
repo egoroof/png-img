@@ -7,16 +7,14 @@
     "node": ">= 6.0.0"
   },
   "dependencies": {
-    "upng-js": "git+https://github.com/photopea/UPNG.js"
+    "@egoroof/upng": "^1.0.0"
   },
   "devDependencies": {
     "benchmark": "^2.1.4",
     "chai": "^3.5.0",
     "eslint": "^5.11.1",
     "mocha": "^2.0.1",
-    "sinon": "^1.17.3"
-  },
-  "optionalDependencies": {
+    "sinon": "^1.17.3",
     "png-img": "2.2.0"
   },
   "scripts": {

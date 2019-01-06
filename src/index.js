@@ -1,5 +1,5 @@
 const utils = require('./utils');
-const upng = require('upng-js');
+const upng = require('@egoroof/upng');
 const fs = require('fs');
 
 module.exports = class PngImg {
@@ -232,7 +232,11 @@ module.exports = class PngImg {
     save(file, callback) {
         const img = this.img;
         const alpha = img.hasAlpha ? 1 : 0;
-        const buffer = Buffer.from(upng.encodeLL([img.data.buffer], img.width, img.height, 3, alpha, img.depth));
+        const colorChannels = 3;
+        const filter = 0;
+        const buffer = Buffer.from(upng.encodeLL(
+            [img.data.buffer], img.width, img.height, colorChannels, alpha, img.depth, filter
+        ));
         fs.writeFile(file, buffer, callback);
     }
 

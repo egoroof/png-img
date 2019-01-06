@@ -10,11 +10,12 @@ const outPath = __dirname + '/out.png';
 
 // add tests
 suite
-    .add('crop 32 bit image', {
+    .add('increase size by 400 for all dimensions', {
         defer: true,
         fn: function (deferred) {
-            var img = new PngImg(img32);
-            img.crop(100, 100, 640, 512);
+            const img = new PngImg(img32);
+            const size = img.size();
+            img.setSize(size.width + 400, size.height + 400);
             img.save(outPath, function (err) {
                 if (err) {
                     console.error(err);
@@ -23,10 +24,24 @@ suite
             });
         }
     })
-    .add('crop 24 bit image', {
+    .add('[native] increase size by 400 for all dimensions', {
         defer: true,
         fn: function (deferred) {
-            var img = new PngImg(img24);
+            const img = new NativePngImg(img32);
+            const size = img.size();
+            img.setSize(size.width + 400, size.height + 400);
+            img.save(outPath, function (err) {
+                if (err) {
+                    console.error(err);
+                }
+                deferred.resolve();
+            });
+        }
+    })
+    .add('crop 32 bit image', {
+        defer: true,
+        fn: function (deferred) {
+            const img = new PngImg(img32);
             img.crop(100, 100, 640, 512);
             img.save(outPath, function (err) {
                 if (err) {
@@ -39,7 +54,20 @@ suite
     .add('[native] crop 32 bit image', {
         defer: true,
         fn: function (deferred) {
-            var img = new NativePngImg(img32);
+            const img = new NativePngImg(img32);
+            img.crop(100, 100, 640, 512);
+            img.save(outPath, function (err) {
+                if (err) {
+                    console.error(err);
+                }
+                deferred.resolve();
+            });
+        }
+    })
+    .add('crop 24 bit image', {
+        defer: true,
+        fn: function (deferred) {
+            const img = new PngImg(img24);
             img.crop(100, 100, 640, 512);
             img.save(outPath, function (err) {
                 if (err) {
@@ -52,7 +80,7 @@ suite
     .add('[native] crop 24 bit image', {
         defer: true,
         fn: function (deferred) {
-            var img = new NativePngImg(img24);
+            const img = new NativePngImg(img24);
             img.crop(100, 100, 640, 512);
             img.save(outPath, function (err) {
                 if (err) {

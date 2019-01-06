@@ -117,9 +117,10 @@ module.exports = class PngImg {
             throw new Error('Dimensions should be less than image size');
         }
         const channelCount = this.img.hasAlpha ? 4 : 3;
-        const cropped = Buffer.alloc(width * height * channelCount);
+        const cropped = Buffer.allocUnsafe(width * height * channelCount);
         let croppedPos = 0;
 
+        // copy width x height area
         for (let i = offsetY; i < height + offsetY; i++) {
             for (let j = offsetX; j < width + offsetX; j++) {
                 const pos = (i * this.img.width + j) * channelCount;
@@ -148,15 +149,15 @@ module.exports = class PngImg {
         }
 
         const channelCount = this.img.hasAlpha ? 4 : 3;
-        const extended = new Uint8Array(width * height * channelCount);
+        const extended = Buffer.alloc(width * height * channelCount);
         let pos = 0;
 
+        // copy source image
         for (let i = 0; i < this.img.height; i++) {
             for (let j = 0; j < this.img.width; j++) {
-                for (let channel = 0; channel < channelCount; channel++) {
-                    const extendedPos = (i * width + j) * channelCount + channel;
-                    extended[extendedPos] = this.img.data[pos++];
-                }
+                const extendedPos = (i * width + j) * channelCount;
+                extended.writeUIntLE(this.img.data.readUIntLE(pos, channelCount), extendedPos, channelCount);
+                pos += channelCount;
             }
         }
         this.img.data = extended;

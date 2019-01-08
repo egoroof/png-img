@@ -4,118 +4,99 @@ const PngImg = require('../src/index');
 const NativePngImg = require('png-img');
 
 const suite = new benchmark.Suite();
-const img32 = fs.readFileSync(__dirname + '/test.png');
-const img24 = fs.readFileSync(__dirname + '/test_no_alpha.png');
+const imgBuff = fs.readFileSync(__dirname + '/test.png');
+const pikachuBuff = fs.readFileSync(__dirname + '/pikachu.png');
 const outPath = __dirname + '/out.png';
 
-suite
-    .add('rotateRight', {
-        defer: true,
-        fn: function (deferred) {
-            const img = new PngImg(img32);
-            img.rotateRight();
-            img.save(outPath, function (err) {
-                if (err) {
-                    console.error(err);
-                }
-                deferred.resolve();
-            });
+let img;
+let pikachuImg;
+
+function resetImg() {
+    img = new PngImg(imgBuff);
+}
+
+function resetNativeImg() {
+    img = new NativePngImg(imgBuff);
+}
+
+function saveTest(deferred) {
+    img.save(outPath, (err) => {
+        if (err) {
+            console.error(err);
         }
+        deferred.resolve();
+    });
+}
+
+function cropTest(deferred) {
+    img.crop(100, 100, 640, 512);
+    // fn is called more times that onCycle and we will crop already cropped image
+    // so assuming timeout is same we can compare relative ops/s for this test
+    setTimeout(() => {
+        deferred.resolve();
+    }, 100);
+}
+
+suite
+    .add('insert', {
+        fn: () => img.insert(pikachuImg, 100, 100),
+        onStart: () => {
+            resetImg();
+            pikachuImg = new PngImg(pikachuBuff);
+        },
+    })
+    .add('[native] insert', {
+        fn: () => img.insert(pikachuImg, 100, 100),
+        onStart: () => {
+            resetNativeImg();
+            pikachuImg = new NativePngImg(pikachuBuff);
+        },
+    })
+    .add('constructor', {
+        fn: () => new PngImg(imgBuff),
+    })
+    .add('[native] constructor', {
+        fn: () => new NativePngImg(imgBuff),
+    })
+    .add('save', {
+        defer: true,
+        fn: saveTest,
+        onStart: resetImg,
+    })
+    .add('[native] save', {
+        defer: true,
+        fn: saveTest,
+        onStart: resetNativeImg,
+    })
+    .add('rotateRight', {
+        fn: () => img.rotateRight(),
+        onStart: resetImg,
     })
     .add('[native] rotateRight', {
-        defer: true,
-        fn: function (deferred) {
-            const img = new NativePngImg(img32);
-            img.rotateRight();
-            img.save(outPath, function (err) {
-                if (err) {
-                    console.error(err);
-                }
-                deferred.resolve();
-            });
-        }
+        fn: () => img.rotateRight(),
+        onStart: resetNativeImg,
     })
     .add('setSize', {
-        defer: true,
-        fn: function (deferred) {
-            const img = new PngImg(img32);
-            const size = img.size();
-            img.setSize(size.width + 400, size.height + 400);
-            img.save(outPath, function (err) {
-                if (err) {
-                    console.error(err);
-                }
-                deferred.resolve();
-            });
-        }
+        fn: () => img.setSize(1500, 1000),
+        onStart: resetImg,
     })
     .add('[native] setSize', {
-        defer: true,
-        fn: function (deferred) {
-            const img = new NativePngImg(img32);
-            const size = img.size();
-            img.setSize(size.width + 400, size.height + 400);
-            img.save(outPath, function (err) {
-                if (err) {
-                    console.error(err);
-                }
-                deferred.resolve();
-            });
-        }
+        fn: () => img.setSize(1500, 1000),
+        onStart: resetNativeImg,
     })
-    .add('crop 32 bit image', {
+    .add('crop', {
         defer: true,
-        fn: function (deferred) {
-            const img = new PngImg(img32);
-            img.crop(100, 100, 640, 512);
-            img.save(outPath, function (err) {
-                if (err) {
-                    console.error(err);
-                }
-                deferred.resolve();
-            });
-        }
+        fn: cropTest,
+        onStart: resetImg,
+        onCycle: resetImg,
     })
-    .add('[native] crop 32 bit image', {
+    .add('[native] crop', {
         defer: true,
-        fn: function (deferred) {
-            const img = new NativePngImg(img32);
-            img.crop(100, 100, 640, 512);
-            img.save(outPath, function (err) {
-                if (err) {
-                    console.error(err);
-                }
-                deferred.resolve();
-            });
-        }
+        fn: cropTest,
+        onStart: resetNativeImg,
+        onCycle: resetNativeImg,
     })
-    .add('crop 24 bit image', {
-        defer: true,
-        fn: function (deferred) {
-            const img = new PngImg(img24);
-            img.crop(100, 100, 640, 512);
-            img.save(outPath, function (err) {
-                if (err) {
-                    console.error(err);
-                }
-                deferred.resolve();
-            });
-        }
-    })
-    .add('[native] crop 24 bit image', {
-        defer: true,
-        fn: function (deferred) {
-            const img = new NativePngImg(img24);
-            img.crop(100, 100, 640, 512);
-            img.save(outPath, function (err) {
-                if (err) {
-                    console.error(err);
-                }
-                deferred.resolve();
-            });
-        }
-    })
-    .on('cycle', function (event) {
+    .on('cycle', (event) => {
         console.log(String(event.target));
     })
     .run({ 'async': true });

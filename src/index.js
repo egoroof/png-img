@@ -185,22 +185,28 @@ module.exports = class PngImg {
             throw new Error('Out of the bounds');
         }
 
-        const channelCount = this.img.hasAlpha ? 4 : 3;
-        let pos = 0;
-
-        for (let i = offsetY; i < imgSize.height + offsetY; i++) {
-            for (let j = offsetX; j < imgSize.width + offsetX; j++) {
-                const myPos = (i * mySize.width + j) * channelCount;
-                // todo write 3 bytes at once
-                this.img.data[myPos] = img.img.data[pos++];
-                this.img.data[myPos + 1] = img.img.data[pos++];
-                this.img.data[myPos + 2] = img.img.data[pos++];
-                if (this.img.hasAlpha) {
-                    if (img.img.hasAlpha) {
-                        this.img.data[myPos + 3] = img.img.data[pos++];
-                    } else {
-                        this.img.data[myPos + 3] = 255;
-                    }
+        if ((this.img.hasAlpha && img.img.hasAlpha) ||
+            (!this.img.hasAlpha && !img.img.hasAlpha)) {
+            const channelCount = this.img.hasAlpha ? 4 : 3;
+            for (let row = 0; row < imgSize.height; row++) {
+                const targetStart = ((row + offsetY) * mySize.width + offsetX) * channelCount;
+                const sourceStart = row * imgSize.width * channelCount;
+                const sourceEnd = ((row + 1) * imgSize.width * channelCount) + 1;
+                img.img.data.copy(this.img.data, targetStart, sourceStart, sourceEnd);
+            }
+        } else if (this.img.hasAlpha) {
+            // extend source pixels with alpha
+            // todo test it perf
+            let sourceStart = 0;
+            for (let row = offsetY; row < imgSize.height + offsetY; row++) {
+                for (
+                    let targetStart = (row * mySize.width + offsetX) * 4;
+                    targetStart < (row * mySize.width + imgSize.width + offsetX) * 4;
+                    targetStart += 4
+                ) {
+                    this.img.data.writeUIntLE(img.img.data.readUIntLE(sourceStart, 3), targetStart, 3);
+                    this.img.data.writeUInt8(255, targetStart + 3);
+                    sourceStart += 3;
                 }
             }
         }

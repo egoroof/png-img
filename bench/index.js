@@ -28,13 +28,12 @@ function saveTest(deferred) {
     });
 }
 
-function cropTest(deferred) {
-    img.crop(100, 100, 640, 512);
-    // fn is called more times that onCycle and we will crop already cropped image
-    // so assuming timeout is same we can compare relative ops/s for this test
-    setTimeout(() => {
-        deferred.resolve();
-    }, 100);
+function cropTest() {
+    try {
+        img.crop(100, 100, 640, 512);
+    } catch (e) {
+        // fn is called more times than onCycle, so it throws
+    }
 }
 
 suite
@@ -85,13 +84,11 @@ suite
         onStart: resetNativeImg,
     })
     .add('crop', {
-        defer: true,
         fn: cropTest,
         onStart: resetImg,
         onCycle: resetImg,
     })
     .add('[native] crop', {
-        defer: true,
         fn: cropTest,
         onStart: resetNativeImg,
         onCycle: resetNativeImg,

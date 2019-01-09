@@ -105,26 +105,24 @@ module.exports = class PngImg {
 
     ///
     crop(offsetX, offsetY, width, height) {
+        const size = this.size();
         if (offsetX < 0 || offsetY < 0 || width < 0 || height < 0) {
             throw new Error('Offsets and dimensions should be positive');
         }
         if (offsetX > width || offsetY > height) {
             throw new Error('Offsets should be less than dimensions');
         }
-        if (width > this.img.width || height > this.img.height) {
+        if (width > size.width || height > size.height) {
             throw new Error('Dimensions should be less than image size');
         }
         const channelCount = this.img.hasAlpha ? 4 : 3;
         const cropped = Buffer.allocUnsafe(width * height * channelCount);
-        let croppedPos = 0;
 
-        // copy width x height area
-        for (let i = offsetY; i < height + offsetY; i++) {
-            for (let j = offsetX; j < width + offsetX; j++) {
-                const pos = (i * this.img.width + j) * channelCount;
-                cropped.writeUIntLE(this.img.data.readUIntLE(pos, channelCount), croppedPos, channelCount);
-                croppedPos += channelCount;
-            }
+        for (let row = 0; row < height; row++) {
+            const targetStart = row * width * channelCount;
+            const sourceStart = ((row + offsetY) * size.width + offsetX) * channelCount;
+            const sourceEnd = ((row + offsetY + 1) * size.width + offsetX) * channelCount + 1;
+            this.img.data.copy(cropped, targetStart, sourceStart, sourceEnd);
         }
 
         this.img.data = cropped;
@@ -191,7 +189,7 @@ module.exports = class PngImg {
             for (let row = 0; row < imgSize.height; row++) {
                 const targetStart = ((row + offsetY) * mySize.width + offsetX) * channelCount;
                 const sourceStart = row * imgSize.width * channelCount;
-                const sourceEnd = ((row + 1) * imgSize.width * channelCount) + 1;
+                const sourceEnd = (row + 1) * imgSize.width * channelCount + 1;
                 img.img.data.copy(this.img.data, targetStart, sourceStart, sourceEnd);
             }
         } else if (this.img.hasAlpha) {

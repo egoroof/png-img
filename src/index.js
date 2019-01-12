@@ -80,24 +80,20 @@ module.exports = class PngImg {
             return this.fill(offsetX, offsetY, width, height, objColor);
         }
 
-        color = {
-            r: color.r || 0,
-            g: color.g || 0,
-            b: color.b || 0,
-            a: color.a === undefined ? 255 : color.a
-        };
         const channelCount = img.hasAlpha ? 4 : 3;
+        const buff = Buffer.allocUnsafe(channelCount);
 
-        for (let i = offsetY; i < height + offsetY; i++) {
-            for (let j = offsetX; j < width + offsetX; j++) {
-                const pos = (i * img.width + j) * channelCount;
-                img.data[pos] = color.r;
-                img.data[pos + 1] = color.g;
-                img.data[pos + 2] = color.b;
-                if (img.hasAlpha) {
-                    img.data[pos + 3] = color.a;
-                }
-            }
+        buff[0] = color.r || 0;
+        buff[1] = color.g || 0;
+        buff[2] = color.b || 0;
+        if (img.hasAlpha) {
+            buff[3] = color.a === undefined ? 255 : color.a;
+        }
+
+        for (let row = offsetY; row < height + offsetY; row++) {
+            const offset = (row * img.width + offsetX) * channelCount;
+            const end = offset + width * channelCount;
+            this.img.data.fill(buff, offset, end);
         }
 
         return this;
@@ -106,6 +102,12 @@ module.exports = class PngImg {
     ///
     crop(offsetX, offsetY, width, height) {
         const size = this.size();
+        if (typeof offsetX !== 'number') {
+            offsetX = 0;
+        }
+        if (typeof offsetY !== 'number') {
+            offsetY = 0;
+        }
         if (offsetX < 0 || offsetY < 0 || width < 0 || height < 0) {
             throw new Error('Offsets and dimensions should be positive');
         }

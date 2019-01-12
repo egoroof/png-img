@@ -13,10 +13,12 @@ let pikachuImg;
 
 function resetImg() {
     img = new PngImg(imgBuff);
+    pikachuImg = new PngImg(pikachuBuff);
 }
 
 function resetNativeImg() {
     img = new NativePngImg(imgBuff);
+    pikachuImg = new NativePngImg(pikachuBuff);
 }
 
 function saveTest(deferred) {
@@ -37,51 +39,51 @@ function cropTest() {
 }
 
 suite
-    .add('insert', {
-        fn: () => img.insert(pikachuImg, 100, 100),
-        onStart: () => {
-            resetImg();
-            pikachuImg = new PngImg(pikachuBuff);
-        },
-    })
-    .add('[native] insert', {
-        fn: () => img.insert(pikachuImg, 100, 100),
-        onStart: () => {
-            resetNativeImg();
-            pikachuImg = new NativePngImg(pikachuBuff);
-        },
-    })
     .add('constructor', {
         fn: () => new PngImg(imgBuff),
     })
     .add('[native] constructor', {
         fn: () => new NativePngImg(imgBuff),
     })
-    .add('save', {
-        defer: true,
-        fn: saveTest,
+    .add('size', {
+        fn: () => img.size(),
         onStart: resetImg,
+        onCycle: resetImg,
     })
-    .add('[native] save', {
-        defer: true,
-        fn: saveTest,
+    .add('[native] size', {
+        fn: () => img.size(),
         onStart: resetNativeImg,
+        onCycle: resetNativeImg,
     })
-    .add('rotateRight', {
-        fn: () => img.rotateRight(),
+    .add('get', {
+        fn: () => img.get(500, 500),
         onStart: resetImg,
+        onCycle: resetImg,
     })
-    .add('[native] rotateRight', {
-        fn: () => img.rotateRight(),
+    .add('[native] get', {
+        fn: () => img.get(500, 500),
         onStart: resetNativeImg,
+        onCycle: resetNativeImg,
     })
-    .add('setSize', {
-        fn: () => img.setSize(1500, 1000),
+    .add('set', {
+        fn: () => img.set(500, 500, '#ffffff'),
         onStart: resetImg,
+        onCycle: resetImg,
     })
-    .add('[native] setSize', {
-        fn: () => img.setSize(1500, 1000),
+    .add('[native] set', {
+        fn: () => img.set(500, 500, '#ffffff'),
         onStart: resetNativeImg,
+        onCycle: resetNativeImg,
+    })
+    .add('fill', {
+        fn: () => img.fill(500, 500, 300, 300, '#ffffff'),
+        onStart: resetImg,
+        onCycle: resetImg,
+    })
+    .add('[native] fill', {
+        fn: () => img.fill(500, 500, 300, 300, '#ffffff'),
+        onStart: resetNativeImg,
+        onCycle: resetNativeImg,
     })
     .add('crop', {
         fn: cropTest,
@@ -90,6 +92,58 @@ suite
     })
     .add('[native] crop', {
         fn: cropTest,
+        onStart: resetNativeImg,
+        onCycle: resetNativeImg,
+    })
+    .add('setSize', {
+        fn: () => img.setSize(1500, 1000),
+        onStart: resetImg,
+        onCycle: resetImg,
+    })
+    .add('[native] setSize', {
+        fn: () => img.setSize(1500, 1000),
+        onStart: resetNativeImg,
+        onCycle: resetNativeImg,
+    })
+    .add('insert', {
+        fn: () => img.insert(pikachuImg, 100, 100),
+        onStart: resetImg,
+        onCycle: resetImg,
+    })
+    .add('[native] insert', {
+        fn: () => img.insert(pikachuImg, 100, 100),
+        onStart: resetNativeImg,
+        onCycle: resetNativeImg,
+    })
+    .add('rotateRight', {
+        fn: () => img.rotateRight(),
+        onStart: resetImg,
+        onCycle: resetImg,
+    })
+    .add('[native] rotateRight', {
+        fn: () => img.rotateRight(),
+        onStart: resetNativeImg,
+        onCycle: resetNativeImg,
+    })
+    .add('rotateLeft', {
+        fn: () => img.rotateLeft(),
+        onStart: resetImg,
+        onCycle: resetImg,
+    })
+    .add('[native] rotateLeft', {
+        fn: () => img.rotateLeft(),
+        onStart: resetNativeImg,
+        onCycle: resetNativeImg,
+    })
+    .add('save', {
+        defer: true,
+        fn: saveTest,
+        onStart: resetImg,
+        onCycle: resetImg,
+    })
+    .add('[native] save', {
+        defer: true,
+        fn: saveTest,
         onStart: resetNativeImg,
         onCycle: resetNativeImg,
     })
